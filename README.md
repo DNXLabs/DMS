@@ -6,3 +6,10 @@ Repository for AWS L2H DMS event
 
 https://trawler.amazon.com/l2hdms
 
+2 - Log in to your AWS Account
+
+https://aws.amazon.com/console/
+
+And go to us-east-1 Region (N.Virginia).
+
+3 - 
