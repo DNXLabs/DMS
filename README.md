@@ -31,3 +31,13 @@ Important
 
 Reference:
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
+
+3 - Go to Cloudformation Console:
+
+https://console.aws.amazon.com/cloudformation/home
+
+Run the stack:
+
+    1) dms.yaml
+    2) clients.yaml
+
