@@ -323,7 +323,7 @@ Resources:
   SourceSQLServerEndpoint:
     Type: AWS::DMS::Endpoint
     Properties:
-      EngineName: oracle
+      EngineName: sqlserver
       EndpointIdentifier: SourceRDSSQLServer
       EndpointType: source
       Username: root
@@ -357,7 +357,7 @@ Resources:
   TargetPostgreSQLEndpoint:
     Type: AWS::DMS::Endpoint
     Properties:
-      EngineName: oracle
+      EngineName: postgres
       EndpointIdentifier: TargetRDSPostgreSQL
       EndpointType: target
       Username: root
@@ -374,19 +374,15 @@ Resources:
   TargetRedshiftEndpoint:
     Type: AWS::DMS::Endpoint
     Properties:
-      EngineName: oracle
+      EngineName: redshift
       EndpointIdentifier: TargetRedshift
       EndpointType: target
       Username: root
       Password: Root1234
       ServerName:
-        - Fn::GetAtt:
-          - RedshiftCluster
-          - Endpoint.Address
+        Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
       Port:
-        - Fn::GetAtt:
-          - RedshiftCluster
-          - Endpoint.Port
+        Fn::GetAtt: [ RedshiftCluster, Endpoint.Port ]
       DatabaseName: dms
   TargetS3Endpoint:
     Type: AWS::DMS::Endpoint
