@@ -1,0 +1,478 @@
+---
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.16.0/20
+      MapPublicIpOnLaunch: true
+      AvailabilityZone : us-east-1a
+      VpcId:
+        Ref: VPC
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/20
+      MapPublicIpOnLaunch: true
+      AvailabilityZone : us-east-1b
+      VpcId:
+        Ref: VPC
+  IGW:
+    Type: AWS::EC2::InternetGateway
+  IGWAttach:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPC
+      InternetGatewayId:
+        Ref: IGW
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: IGW
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC
+  mySubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: PublicSubnet1
+      RouteTableId:
+        Ref: PublicRouteTable
+  mySubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: PublicSubnet2
+      RouteTableId:
+        Ref: PublicRouteTable
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow TCP to VPC CIDR
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 0
+        ToPort: 65535
+        CidrIp: 10.0.0.0/16
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 0
+        ToPort: 65535
+        CidrIp: 0.0.0.0/0
+  MyDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnets available for the RDS DB Instance
+      SubnetIds:
+      - Ref: PublicSubnet1
+      - Ref: PublicSubnet2
+  RDSOracle:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 50
+      AutoMinorVersionUpgrade: 'false'
+      VPCSecurityGroups:
+      - Ref: InstanceSecurityGroup
+      DBInstanceIdentifier: RDSOracle
+      DBName: ORCL 
+      DBInstanceClass: db.t2.medium
+      DBSubnetGroupName: 
+        Ref: MyDBSubnetGroup
+      Engine: oracle-ee
+      EngineVersion: 12.1.0.2.v12
+      MasterUsername: root
+      MasterUserPassword: Root1234
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      DBParameterGroupName:
+        Ref: MyRDSOracleParamGroup
+  MyRDSOracleParamGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: oracle-ee-12.1
+      Description: Oracle Custom Database Parameter Group
+  RDSMySQL:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 50
+      AutoMinorVersionUpgrade: 'false'
+      VPCSecurityGroups:
+      - Ref: InstanceSecurityGroup
+      DBInstanceIdentifier: RDSMySQL
+      DBName: dms 
+      DBInstanceClass: db.t2.medium
+      DBSubnetGroupName: 
+        Ref: MyDBSubnetGroup
+      Engine: mysql
+      EngineVersion: 5.6.34
+      MasterUsername: root
+      MasterUserPassword: Root1234
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      DBParameterGroupName:
+        Ref: MyRDSMySQLParamGroup
+  MyRDSMySQLParamGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: mysql5.6
+      Description: MySQL Custom Database Parameter Group
+      Parameters:
+        general_log: '1'
+        log_output: 'file'
+        slow_query_log: 1
+        long_query_time: 1
+        binlog_format: 'ROW'
+        binlog_checksum: 'NONE'
+  RDSSQLServer:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 50
+      AutoMinorVersionUpgrade: 'false'
+      VPCSecurityGroups:
+      - Ref: InstanceSecurityGroup
+      DBInstanceIdentifier: RDSSQLServer
+      DBInstanceClass: db.r4.xlarge
+      DBSubnetGroupName: 
+        Ref: MyDBSubnetGroup
+      Engine: sqlserver-ee
+      EngineVersion: 13.00.4522.0.v1
+      MasterUsername: root
+      MasterUserPassword: Root1234
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      LicenseModel: license-included
+      DBParameterGroupName:
+        Ref: MyRDSSQLServerParamGroup
+  MyRDSSQLServerParamGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: sqlserver-ee-13.0
+      Description: SQL Server Custom Database Parameter Group
+  RDSPostgreSQL:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 50
+      AutoMinorVersionUpgrade: 'false'
+      VPCSecurityGroups:
+      - Ref: InstanceSecurityGroup
+      DBInstanceIdentifier: RDSPostgreSQL
+      DBName: dms
+      DBInstanceClass: db.t2.medium
+      DBSubnetGroupName: 
+        Ref: MyDBSubnetGroup
+      Engine: postgres
+      EngineVersion: 9.6.10
+      MasterUsername: root
+      MasterUserPassword: Root1234
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      DBParameterGroupName:
+        Ref: MyRDSPostgreSQLParamGroup
+  MyRDSPostgreSQLParamGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: postgres9.6
+      Description: PostgreSQL Custom Database Parameter Group
+  S3Bucket:
+    Type: AWS::S3::Bucket
+  MyClusterSubnetGroup:
+    Type: AWS::Redshift::ClusterSubnetGroup
+    Properties:
+      Description: Subnets available for the RDS DB Instance
+      SubnetIds:
+      - Ref: PublicSubnet1
+      - Ref: PublicSubnet2
+  RedshiftCluster:
+    Type: "AWS::Redshift::Cluster"
+    Properties: 
+      ClusterIdentifier: RedshiftCluster
+      ClusterParameterGroupName: 
+         Ref: myClusterParameterGroup
+      ClusterSubnetGroupName: 
+        Ref: MyClusterSubnetGroup
+      ClusterType: single-node
+      DBName: dms
+      MasterUsername: root
+      MasterUserPassword: Root1234
+      NodeType: ds2.xlarge
+      Port: 5439
+      PubliclyAccessible: yes
+      VpcSecurityGroupIds:
+        - Ref: InstanceSecurityGroup
+  myClusterParameterGroup: 
+    Type: "AWS::Redshift::ClusterParameterGroup"
+    Properties: 
+      Description: "Redshift Cluster parameter group"
+      ParameterGroupFamily: "redshift-1.0"
+  DMSVPCRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - dms.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole
+      Path: "/"
+      RoleName: dms-vpc-role
+  DMScwRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - dms.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole
+      Path: "/"
+      RoleName: dms-cloudwatch-logs-role
+  DMSredshiftRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - dms.amazonaws.com
+            - redshift.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonDMSRedshiftS3Role
+      Path: "/"
+      RoleName: dms-access-for-endpoint
+  ReplicationSubnetGroup:
+    Type: AWS::DMS::ReplicationSubnetGroup
+    Properties:
+      ReplicationSubnetGroupIdentifier: dms-subnet-group
+      ReplicationSubnetGroupDescription: DMS subnet group
+      SubnetIds:
+      - Ref: PublicSubnet1
+      - Ref: PublicSubnet2
+  ReplicationInstance:
+    Type: AWS::DMS::ReplicationInstance
+    Properties:
+      ReplicationInstanceClass: dms.c4.xlarge
+      ReplicationInstanceIdentifier: dms-replication-instance1
+      VpcSecurityGroupIds:
+      - Ref: InstanceSecurityGroup
+      ReplicationSubnetGroupIdentifier:
+        Ref: ReplicationSubnetGroup
+      PubliclyAccessible: 'false'
+      EngineVersion: 2.4.3
+      MultiAZ: 'false'
+  SourceMySQLEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: mysql
+      EndpointIdentifier: SourceRDSMysql
+      EndpointType: source
+      Username: root
+      Password: Root1234
+      ServerName:
+        - Fn::GetAtt:
+          - RDSMySQL
+          - Endpoint.Address
+      Port:
+        - Fn::GetAtt:
+          - RDSMySQL
+          - Endpoint.Port
+      DatabaseName: dms
+  SourceOracleEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: oracle
+      EndpointIdentifier: SourceRDSOracle
+      EndpointType: source
+      Username: root
+      Password: Root1234
+      ServerName:
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Address
+      Port:
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Port
+      DatabaseName: ORCL
+      ExtraConnectionAttributes: addSupplementalLogging=Y;useLogminerReader=Y
+  SourceSQLServerEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: oracle
+      EndpointIdentifier: SourceRDSSQLServer
+      EndpointType: source
+      Username: root
+      Password: Root1234
+      ServerName:
+        - Fn::GetAtt:
+          - RDSSQLServer
+          - Endpoint.Address
+      Port:
+        - Fn::GetAtt:
+          - RDSSQLServer
+          - Endpoint.Port
+      DatabaseName: dms
+  TargetOracleEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: oracle
+      EndpointIdentifier: TargetRDSOracle
+      EndpointType: target
+      Username: root
+      Password: Root1234
+      ServerName:
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Address
+      Port:
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Port
+      DatabaseName: ORCL
+  TargetPostgreSQLEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: oracle
+      EndpointIdentifier: TargetRDSPostgreSQL
+      EndpointType: target
+      Username: root
+      Password: Root1234
+      ServerName:
+        - Fn::GetAtt:
+          - RDSPostgreSQL
+          - Endpoint.Address
+      Port:
+        - Fn::GetAtt:
+          - RDSPostgreSQL
+          - Endpoint.Port
+      DatabaseName: dms
+  TargetRedshiftEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: oracle
+      EndpointIdentifier: TargetRedshift
+      EndpointType: target
+      Username: root
+      Password: Root1234
+      ServerName:
+        - Fn::GetAtt:
+          - RedshiftCluster
+          - Endpoint.Address
+      Port:
+        - Fn::GetAtt:
+          - RedshiftCluster
+          - Endpoint.Port
+      DatabaseName: dms
+  TargetS3Endpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: s3
+      EndpointIdentifier: TargetS3
+      EndpointType: target
+      S3Settings: 
+        BucketName: 
+          Ref: S3Bucket
+        ServiceAccessRoleArn:
+          Fn::GetAtt: [ DMSredshiftRole, Arn ] 
+Outputs:
+  RDSOracleEndpoint:
+    Description: RDS Oracle Endpoint
+    Value:
+      Fn::Join:
+      - ''
+      - - 'endpoint:'
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Address
+        - ":"
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Port
+        - "/"
+  RDSMySQLEndpoint:
+    Description: RDS MySQL Endpoint
+    Value:
+     Fn::Join:
+      - ''
+      - - 'endpoint:'
+        - Fn::GetAtt:
+          - RDSMySQL
+          - Endpoint.Address
+        - ":"
+        - Fn::GetAtt:
+          - RDSMySQL
+          - Endpoint.Port
+        - "/"
+  RDSSQLServerEndpoint:
+    Description: RDS SQL Server Endpoint
+    Value:
+     Fn::Join:
+      - ''
+      - - 'endpoint:'
+        - Fn::GetAtt:
+          - RDSSQLServer
+          - Endpoint.Address
+        - ":"
+        - Fn::GetAtt:
+          - RDSSQLServer
+          - Endpoint.Port
+        - "/"
+  RDSPostgreSQLEndpoint:
+    Description: RDS PostgreSQL Endpoint
+    Value:
+     Fn::Join:
+      - ''
+      - - 'endpoint:'
+        - Fn::GetAtt:
+          - RDSPostgreSQL
+          - Endpoint.Address
+        - ":"
+        - Fn::GetAtt:
+          - RDSPostgreSQL
+          - Endpoint.Port
+        - "/"
+  BucketName:
+    Value: !Ref 'S3Bucket'
+  RedshiftEndpoint:
+    Description: Redshift Endpoint
+    Value:
+     Fn::Join:
+      - ''
+      - - 'endpoint:'
+        - Fn::GetAtt:
+          - RedshiftCluster
+          - Endpoint.Address
+        - ":"
+        - Fn::GetAtt:
+          - RedshiftCluster
+          - Endpoint.Port
+        - "/"
+  DMSReplicationInstanceARN:
+    Description: Name of the DMS Replication Instance
+    Value:
+      Ref: ReplicationInstance
