@@ -294,13 +294,9 @@ Resources:
       Username: root
       Password: Root1234
       ServerName:
-        - Fn::GetAtt:
-          - RDSMySQL
-          - Endpoint.Address
+        Fn::GetAtt: [ RDSMySQL, Endpoint.Address ]
       Port:
-        - Fn::GetAtt:
-          - RDSMySQL
-          - Endpoint.Port
+        Fn::GetAtt: [ RDSMySQL, Endpoint.Port ]
       DatabaseName: dms
   SourceOracleEndpoint:
     Type: AWS::DMS::Endpoint
@@ -311,13 +307,9 @@ Resources:
       Username: root
       Password: Root1234
       ServerName:
-        - Fn::GetAtt:
-          - RDSOracle
-          - Endpoint.Address
+        Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
       Port:
-        - Fn::GetAtt:
-          - RDSOracle
-          - Endpoint.Port
+        Fn::GetAtt: [ RDSOracle, Endpoint.Port ]
       DatabaseName: ORCL
       ExtraConnectionAttributes: addSupplementalLogging=Y;useLogminerReader=Y
   SourceSQLServerEndpoint:
@@ -329,13 +321,9 @@ Resources:
       Username: root
       Password: Root1234
       ServerName:
-        - Fn::GetAtt:
-          - RDSSQLServer
-          - Endpoint.Address
+        Fn::GetAtt: [ RDSSQLServer, Endpoint.Address ]
       Port:
-        - Fn::GetAtt:
-          - RDSSQLServer
-          - Endpoint.Port
+        Fn::GetAtt: [ RDSSQLServer, Endpoint.Port ]
       DatabaseName: dms
   TargetOracleEndpoint:
     Type: AWS::DMS::Endpoint
@@ -346,13 +334,9 @@ Resources:
       Username: root
       Password: Root1234
       ServerName:
-        - Fn::GetAtt:
-          - RDSOracle
-          - Endpoint.Address
+        Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
       Port:
-        - Fn::GetAtt:
-          - RDSOracle
-          - Endpoint.Port
+        Fn::GetAtt: [ RDSOracle, Endpoint.Port ]
       DatabaseName: ORCL
   TargetPostgreSQLEndpoint:
     Type: AWS::DMS::Endpoint
@@ -363,13 +347,9 @@ Resources:
       Username: root
       Password: Root1234
       ServerName:
-        - Fn::GetAtt:
-          - RDSPostgreSQL
-          - Endpoint.Address
+        Fn::GetAtt: [ RDSPostgreSQL, Endpoint.Address ]
       Port:
-        - Fn::GetAtt:
-          - RDSPostgreSQL
-          - Endpoint.Port
+        Fn::GetAtt: [ RDSPostgreSQL, Endpoint.Port ]
       DatabaseName: dms
   TargetRedshiftEndpoint:
     Type: AWS::DMS::Endpoint
