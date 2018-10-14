@@ -263,6 +263,7 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonDMSRedshiftS3Role
+      - arn:aws:iam::aws:policy/service-role/AmazonS3FullAccess
       Path: "/"
       RoleName: dms-access-for-endpoint
   ReplicationSubnetGroup:
