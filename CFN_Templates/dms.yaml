@@ -282,7 +282,7 @@ Resources:
   ReplicationInstance:
     Type: AWS::DMS::ReplicationInstance
     Properties:
-      ReplicationInstanceClass: dms.c4.xlarge
+      ReplicationInstanceClass: dms.t2.medium
       ReplicationInstanceIdentifier: dms-replication-instance1
       VpcSecurityGroupIds:
       - Ref: InstanceSecurityGroup
