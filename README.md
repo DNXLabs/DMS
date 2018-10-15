@@ -44,3 +44,22 @@ and launch the stack:
     https://github.com/maiconrocha/L2H_DMS_event/blob/master/CFN_Templates/dms.yaml
 ```
   *You should choose a name for the stack and specify the key pair you previously launched
+  
+  This cloudformation stack is going to create the following AWS Resources in your account:
+  
+  - VPC(10.0.0.0/16)
+  - Subnets
+  - IGW
+  - RDS Oracle
+  - RDS MySQL
+  - RDS SQLServer
+  - RDS PostgreSQL
+  - Redshift Cluster
+  - S3 Bucket
+  - DMS Replication Instance
+  - DMS Endpoints
+  - Route 53 Domain
+  - Route R3 RecordSets
+  - EC2 Instance (with all the clients pre configured)
+  
+  *Please note the DMS Tasks should be created manually.
