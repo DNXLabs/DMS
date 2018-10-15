@@ -27,6 +27,11 @@ Important
 ```
       chmod 400 my-key-pair.pem
 ```
+
+   If you use windows you probably need convert your pem file to ppk file following the steps below:
+   
+   https://aws.amazon.com/premiumsupport/knowledge-center/convert-pem-file-into-ppk/
+   
 Reference:
 https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
 
