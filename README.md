@@ -2,9 +2,7 @@
 Repository for AWS L2H DMS event
 
 
-**1 - Please click on the link to inform your name and AWS Account ID in order to whitelist your account.**
-
-https://trawler.amazon.com/l2hdms
+**1 - Please inform your AWS Account ID to the instructor in order to whitelist your account.**
 
 **2 - Log in to your AWS Account**
 
@@ -39,5 +37,4 @@ https://console.aws.amazon.com/cloudformation/home
 and run the stack:
 ```
     1) dms.yaml
-    2) clients.yaml
 ```
