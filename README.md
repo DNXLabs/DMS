@@ -39,7 +39,7 @@ https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
 
 https://console.aws.amazon.com/cloudformation/home
 
-and run the stack:
+and launch the stack:
 ```
-    1) dms.yaml
+    [dms.yaml](CFN_Templates/dms.yaml)
 ```
