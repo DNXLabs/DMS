@@ -41,5 +41,6 @@ https://console.aws.amazon.com/cloudformation/home
 
 and launch the stack:
 ```
-    [dms.yaml](CFN_Templates/dms.yaml)
+    https://github.com/maiconrocha/L2H_DMS_event/blob/master/CFN_Templates/dms.yaml
 ```
+  *You should choose a name for the stack and specify the key pair you previously launched
