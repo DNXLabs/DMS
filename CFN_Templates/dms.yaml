@@ -268,7 +268,7 @@ Resources:
           Action: sts:AssumeRole
       ManagedPolicyArns:
       - arn:aws:iam::aws:policy/service-role/AmazonDMSRedshiftS3Role
-      - arn:aws:iam::aws:policy/service-role/AmazonS3FullAccess
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
       Path: "/"
       RoleName: dms-access-for-endpoint
   ReplicationSubnetGroup:
@@ -324,6 +324,19 @@ Resources:
       EngineName: sqlserver
       EndpointIdentifier: SourceRDSSQLServer
       EndpointType: source
+      Username: root
+      Password: Root1234
+      ServerName:
+        Fn::GetAtt: [ RDSSQLServer, Endpoint.Address ]
+      Port:
+        Fn::GetAtt: [ RDSSQLServer, Endpoint.Port ]
+      DatabaseName: dms
+  TargetSQLServerEndpoint:
+    Type: AWS::DMS::Endpoint
+    Properties:
+      EngineName: sqlserver
+      EndpointIdentifier: TargetRDSSQLServer
+      EndpointType: target
       Username: root
       Password: Root1234
       ServerName:
@@ -462,7 +475,7 @@ Resources:
     Properties:
       GroupDescription: Enable SSH access via port 22
       VpcId:
-        Ref: Vpc
+        Ref: VPC
       SecurityGroupIngress:
       - IpProtocol: tcp
         FromPort: 22
