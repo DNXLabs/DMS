@@ -1,4 +1,9 @@
 ---
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
 Resources:
   VPC:
     Type: AWS::EC2::VPC
@@ -146,10 +151,10 @@ Resources:
       VPCSecurityGroups:
       - Ref: InstanceSecurityGroup
       DBInstanceIdentifier: RDSSQLServer
-      DBInstanceClass: db.r4.xlarge
+      DBInstanceClass: db.m4.large
       DBSubnetGroupName: 
         Ref: MyDBSubnetGroup
-      Engine: sqlserver-ee
+      Engine: sqlserver-se
       EngineVersion: 13.00.4522.0.v1
       MasterUsername: root
       MasterUserPassword: Root1234
@@ -161,7 +166,7 @@ Resources:
   MyRDSSQLServerParamGroup:
     Type: AWS::RDS::DBParameterGroup
     Properties:
-      Family: sqlserver-ee-13.0
+      Family: sqlserver-se-13.0
       Description: SQL Server Custom Database Parameter Group
   RDSPostgreSQL:
     Type: AWS::RDS::DBInstance
@@ -209,7 +214,7 @@ Resources:
       DBName: dms
       MasterUsername: root
       MasterUserPassword: Root1234
-      NodeType: ds2.xlarge
+      NodeType: dc1.large
       Port: 5439
       PubliclyAccessible: yes
       VpcSecurityGroupIds:
@@ -375,7 +380,94 @@ Resources:
         BucketName: 
           Ref: S3Bucket
         ServiceAccessRoleArn:
-          Fn::GetAtt: [ DMSredshiftRole, Arn ] 
+          Fn::GetAtt: [ DMSredshiftRole, Arn ]
+  DNS: 
+    Type: "AWS::Route53::HostedZone"
+    Properties: 
+      Name: 'l2hdms.com'
+      VPCs: 
+        -
+          VPCId: 
+            Ref: VPC
+          VPCRegion: "us-east-1"
+  RDSOracleDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdsoracle.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
+  RDSMySQLDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdsmysql.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSMySQL, Endpoint.Address ]
+  RDSPostgreSQLDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdspostgresql.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSPostgreSQL, Endpoint.Address ]
+  RDSSQLServerDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdssqlserver.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSSQLServer, Endpoint.Address ]
+  RedshiftDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'redshiftcluster.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref 'KeyName'
+      ImageId: ami-0943e43d0ba3e33eb
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: 
+            - Ref: "EC2InstanceSecurityGroup"
+          SubnetId: 
+            Ref: "PublicSubnet1"
+      Tags:
+        -
+          Key: Name
+          Value: Clients
+  EC2InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      VpcId:
+        Ref: Vpc
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 54.240.0.0/16 
 Outputs:
   RDSOracleEndpoint:
     Description: RDS Oracle Endpoint
@@ -453,3 +545,15 @@ Outputs:
     Description: Name of the DMS Replication Instance
     Value:
       Ref: ReplicationInstance
+  InstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref 'EC2Instance'
+  AZ:
+    Description: Availability Zone of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, AvailabilityZone]
+  PublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, PublicDnsName]
+  PublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, PublicIp]
