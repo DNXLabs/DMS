@@ -39,10 +39,8 @@ https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
 
 https://console.aws.amazon.com/cloudformation/home
 
-and launch the stack:
-```
-    https://github.com/maiconrocha/L2H_DMS_event/blob/master/CFN_Templates/dms.yaml
-```
+and launch the stack below:
+
 [Cloudformation Template](https://github.com/maiconrocha/L2H_DMS_event/blob/master/CFN_Templates/dms.yaml).
 
 
