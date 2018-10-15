@@ -43,6 +43,9 @@ and launch the stack:
 ```
     https://github.com/maiconrocha/L2H_DMS_event/blob/master/CFN_Templates/dms.yaml
 ```
+[Cloudformation Template](https://github.com/maiconrocha/L2H_DMS_event/blob/master/CFN_Templates/dms.yaml).
+
+
   *You should choose a name for the stack and specify the key pair you previously launched
   
   This cloudformation stack is going to create the following AWS Resources in your account:
