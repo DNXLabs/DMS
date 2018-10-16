@@ -1,0 +1,328 @@
+---
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access to the instance
+    Type: AWS::EC2::KeyPair::KeyName
+    ConstraintDescription: must be the name of an existing EC2 KeyPair.
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: 10.0.0.0/16
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.16.0/20
+      MapPublicIpOnLaunch: true
+      AvailabilityZone : us-east-1a
+      VpcId:
+        Ref: VPC
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      CidrBlock: 10.0.0.0/20
+      MapPublicIpOnLaunch: true
+      AvailabilityZone : us-east-1b
+      VpcId:
+        Ref: VPC
+  IGW:
+    Type: AWS::EC2::InternetGateway
+  IGWAttach:
+    Type: AWS::EC2::VPCGatewayAttachment
+    Properties:
+      VpcId:
+        Ref: VPC
+      InternetGatewayId:
+        Ref: IGW
+  PublicRoute:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId:
+        Ref: PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId:
+        Ref: IGW
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    Properties:
+      VpcId:
+        Ref: VPC
+  mySubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: PublicSubnet1
+      RouteTableId:
+        Ref: PublicRouteTable
+  mySubnet2RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      SubnetId:
+        Ref: PublicSubnet2
+      RouteTableId:
+        Ref: PublicRouteTable
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow TCP to VPC CIDR
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 0
+        ToPort: 65535
+        CidrIp: 10.0.0.0/16
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: 0
+        ToPort: 65535
+        CidrIp: 0.0.0.0/0
+  MyDBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: Subnets available for the RDS DB Instance
+      SubnetIds:
+      - Ref: PublicSubnet1
+      - Ref: PublicSubnet2
+  RDSOracle:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 50
+      AutoMinorVersionUpgrade: 'false'
+      VPCSecurityGroups:
+      - Ref: InstanceSecurityGroup
+      DBInstanceIdentifier: RDSOracle
+      DBName: ORCL 
+      DBInstanceClass: db.t2.medium
+      DBSubnetGroupName: 
+        Ref: MyDBSubnetGroup
+      Engine: oracle-ee
+      EngineVersion: 12.1.0.2.v12
+      MasterUsername: root
+      MasterUserPassword: Root1234
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      DBParameterGroupName:
+        Ref: MyRDSOracleParamGroup
+  MyRDSOracleParamGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: oracle-ee-12.1
+      Description: Oracle Custom Database Parameter Group
+  RDSMySQL:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 50
+      AutoMinorVersionUpgrade: 'false'
+      VPCSecurityGroups:
+      - Ref: InstanceSecurityGroup
+      DBInstanceIdentifier: RDSMySQL
+      DBName: dms 
+      DBInstanceClass: db.t2.medium
+      DBSubnetGroupName: 
+        Ref: MyDBSubnetGroup
+      Engine: mysql
+      EngineVersion: 5.6.34
+      MasterUsername: root
+      MasterUserPassword: Root1234
+      StorageType: gp2
+      BackupRetentionPeriod: 7
+      DBParameterGroupName:
+        Ref: MyRDSMySQLParamGroup
+  MyRDSMySQLParamGroup:
+    Type: AWS::RDS::DBParameterGroup
+    Properties:
+      Family: mysql5.6
+      Description: MySQL Custom Database Parameter Group
+      Parameters:
+        general_log: '1'
+        log_output: 'file'
+        slow_query_log: 1
+        long_query_time: 1
+        binlog_format: 'ROW'
+        binlog_checksum: 'NONE'
+  DMSVPCRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - dms.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonDMSVPCManagementRole
+      Path: "/"
+      RoleName: dms-vpc-role
+  DMScwRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - dms.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonDMSCloudWatchLogsRole
+      Path: "/"
+      RoleName: dms-cloudwatch-logs-role
+  DMSredshiftRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+        - Effect: Allow
+          Principal:
+            Service:
+            - dms.amazonaws.com
+            - redshift.amazonaws.com
+          Action: sts:AssumeRole
+      ManagedPolicyArns:
+      - arn:aws:iam::aws:policy/service-role/AmazonDMSRedshiftS3Role
+      - arn:aws:iam::aws:policy/AmazonS3FullAccess
+      Path: "/"
+      RoleName: dms-access-for-endpoint
+  ReplicationSubnetGroup:
+    Type: AWS::DMS::ReplicationSubnetGroup
+    Properties:
+      ReplicationSubnetGroupIdentifier: dms-subnet-group
+      ReplicationSubnetGroupDescription: DMS subnet group
+      SubnetIds:
+      - Ref: PublicSubnet1
+      - Ref: PublicSubnet2
+  DNS: 
+    Type: "AWS::Route53::HostedZone"
+    Properties: 
+      Name: 'l2hdms.com'
+      VPCs: 
+        -
+          VPCId: 
+            Ref: VPC
+          VPCRegion: "us-east-1"
+  RDSOracleDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdsoracle.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
+  RDSMySQLDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdsmysql.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSMySQL, Endpoint.Address ]
+  RDSPostgreSQLDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdspostgresql.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSPostgreSQL, Endpoint.Address ]
+  RDSSQLServerDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'rdssqlserver.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RDSSQLServer, Endpoint.Address ]
+  RedshiftDNSRecord:
+    Type: AWS::Route53::RecordSet
+    Properties:
+      HostedZoneId: !Ref 'DNS'
+      Comment: 'DNS name for my instance.'
+      Name: 'redshiftcluster.l2hdms.com.'
+      Type: CNAME
+      TTL: '30'
+      ResourceRecords: 
+        - Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
+  EC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: t2.micro
+      KeyName: !Ref 'KeyName'
+      ImageId: ami-0943e43d0ba3e33eb
+      NetworkInterfaces: 
+        - AssociatePublicIpAddress: "true"
+          DeviceIndex: "0"
+          GroupSet: 
+            - Ref: "EC2InstanceSecurityGroup"
+          SubnetId: 
+            Ref: "PublicSubnet1"
+      Tags:
+        -
+          Key: Name
+          Value: Clients
+  EC2InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable SSH access via port 22
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 54.240.0.0/16 
+Outputs:
+  RDSOracleEndpoint:
+    Description: RDS Oracle Endpoint
+    Value:
+      Fn::Join:
+      - ''
+      - - 'endpoint:'
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Address
+        - ":"
+        - Fn::GetAtt:
+          - RDSOracle
+          - Endpoint.Port
+        - "/"
+  RDSMySQLEndpoint:
+    Description: RDS MySQL Endpoint
+    Value:
+     Fn::Join:
+      - ''
+      - - 'endpoint:'
+        - Fn::GetAtt:
+          - RDSMySQL
+          - Endpoint.Address
+        - ":"
+        - Fn::GetAtt:
+          - RDSMySQL
+          - Endpoint.Port
+        - "/"
+  InstanceId:
+    Description: InstanceId of the newly created EC2 instance
+    Value: !Ref 'EC2Instance'
+  AZ:
+    Description: Availability Zone of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, AvailabilityZone]
+  PublicDNS:
+    Description: Public DNSName of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, PublicDnsName]
+  PublicIP:
+    Description: Public IP address of the newly created EC2 instance
+    Value: !GetAtt [EC2Instance, PublicIp]
