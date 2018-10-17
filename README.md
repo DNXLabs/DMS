@@ -74,7 +74,8 @@ and DMS tasks manually.
 
 All the infastrucuture needed as a pre requirement to create DMS resources
 will be created by the cloudformation template below
-[challenge.yaml] (https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/challenge.yaml).  
+[challenge.yaml](https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/challenge.yaml).
+
 This cloudformation stack is going to create the following AWS Resources in your account:
 
 - VPC(10.0.0.0/16)
@@ -106,7 +107,7 @@ Reference: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.htm
 
 and launch the stack below:
 
-[challenge.yaml] (https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/challenge.yaml).  
+[challenge.yaml](https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/challenge.yaml).
 
 You should save the file on your local machine and then 
 inform this file when launching the cloudformation stack.
