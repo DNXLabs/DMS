@@ -117,7 +117,7 @@ inform this file when launching the cloudformation stack.
 The time the stack takes to complete is about 15 - 20 minutes.
 
 ***You don't need to wait until Cloudformation Finish to go to the next steps. 
-As soon the RDS Oracle and RDS Mysql are in the creation process you can go to the step 4.
+As soon the RDS Oracle and RDS Mysql are in the creation process you can go to the step 4.***
 
 
 ## 4 - Start Creating DMS Resources
