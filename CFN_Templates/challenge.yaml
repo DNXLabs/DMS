@@ -227,36 +227,6 @@ Resources:
       TTL: '30'
       ResourceRecords: 
         - Fn::GetAtt: [ RDSMySQL, Endpoint.Address ]
-  RDSPostgreSQLDNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref 'DNS'
-      Comment: 'DNS name for my instance.'
-      Name: 'rdspostgresql.l2hdms.com.'
-      Type: CNAME
-      TTL: '30'
-      ResourceRecords: 
-        - Fn::GetAtt: [ RDSPostgreSQL, Endpoint.Address ]
-  RDSSQLServerDNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref 'DNS'
-      Comment: 'DNS name for my instance.'
-      Name: 'rdssqlserver.l2hdms.com.'
-      Type: CNAME
-      TTL: '30'
-      ResourceRecords: 
-        - Fn::GetAtt: [ RDSSQLServer, Endpoint.Address ]
-  RedshiftDNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref 'DNS'
-      Comment: 'DNS name for my instance.'
-      Name: 'redshiftcluster.l2hdms.com.'
-      Type: CNAME
-      TTL: '30'
-      ResourceRecords: 
-        - Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
