@@ -131,23 +131,23 @@ following the steps below:
 - On the left menu, click on Replication Instance
 - Click on 'Create Replication Instance'
 
-For This Option			    - Do This
+For This Option             - Do This
 
-Name            		       - Type a name for the replication instance that contains from 8 to 16 printable ASCII characters (excluding /,", and @).
-Description     		       - Type a brief description of the replication instance.
+Name                        - Type a name for the replication instance that contains from 8 to 16 printable ASCII characters (excluding /,", and @).
+Description                 - Type a brief description of the replication instance.
 Instance class  		       - dms.t2.medium
 Replication engine version  - 2.4.3
-VPC						       - Choose the Amazon Virtual Private Cloud (Amazon VPC) which was created by the cloudformation. Should be the VPC with longer characters. If you are not sure go to VPC console(https://console.aws.amazon.com/dms) and find the VPC ID for CIDR (10.0.0.0/16).
+VPC                         - Choose the Amazon Virtual Private Cloud (Amazon VPC) which was created by the cloudformation. Should be the VPC with longer characters. If you are not sure go to VPC console(https://console.aws.amazon.com/dms) and find the VPC ID for CIDR (10.0.0.0/16).
 
-Multi-AZ 				       - no
-Publicly accessible			 - no
+Multi-AZ                    - no
+Publicly accessible         - no
 
 Advanced:
 
-Allocated storage (GB)		 - 50 GB
+Allocated storage (GB)      - 50 GB
 Replication Subnet Group    - dms-subnet-group
-Availability zone			    - no preference
-VPC Security Group(s)		 -  You should select the security group which have the string 'InstanceSecurityGroup' 
+Availability zone           - no preference
+VPC Security Group(s)       -  You should select the security group which have the string 'InstanceSecurityGroup' 
 KMS master Key              - Use the default
 
 Maintenance:
@@ -289,7 +289,7 @@ hr_popul.sql
 After download the files,
 Connect to the RDS Oracle:
 
-# . oracle.sh 
+ . oracle.sh 
 
 And then create the user and insert data running the commands below:
 
