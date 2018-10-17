@@ -72,8 +72,9 @@ and launch the stack below:
 For today we expect you to be able to create DMS Replication Instance, DMS Endpoints
 and DMS tasks manually.
 
-All the infastrucuture needed as a pre requirement to create DMS resources
+All the infrastructure needed as a pre requirement to create DMS resources
 will be created by the cloudformation template below
+
 [challenge.yaml](https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/challenge.yaml).
 
 This cloudformation stack is going to create the following AWS Resources in your account:
