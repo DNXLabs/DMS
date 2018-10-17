@@ -1,6 +1,7 @@
 # L2H_DMS_event
 Repository for AWS L2H DMS event
 
+# 2 Day
 
 **1 - Please inform your AWS Account ID to the instructor in order to whitelist your account.**
 
@@ -64,3 +65,7 @@ and launch the stack below:
   - EC2 Instance (with all the clients pre configured)
   
   *Please note the DMS Tasks should be created manually.
+  
+  
+  # 3 Day - Challenge Day
+
