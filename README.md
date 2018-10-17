@@ -380,7 +380,7 @@ For more information, please refer: https://docs.aws.amazon.com/dms/latest/userg
 ## 12 - You should be able to answer the following questions:
 
 
-   ###### Was the task complete without any errors?
+   ###### 1 - Was the task complete without any errors?
    
    *** :confused: If there is a error, have you followed the steps on the section "Working with an Amazon-Managed Oracle Database as a Source for AWS DMS"
 on the link below ?
@@ -389,25 +389,30 @@ on the link below ?
     Once you have fixed the error, you can restart the task
     Click on Start/Resume - Restart***
 
-   ###### Are you able to find the data on RDS Mysql target?
+   ###### 2 - Are you able to find the data on RDS Mysql target?
 
-   ###### Were the tables created in UPPER CASE or lower case? Why?
+   ###### 3 - Were the tables created in UPPER CASE or lower case? Why?
 
-   ###### Do you think any transformation rule should be created to migrate tables in lower case?
+   ###### 4 - Do you think any transformation rule should be created to migrate tables in lower case?
 
      https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.html
 
    
-  ###### Was DMS able to migrate the view under HR schema?
+  ###### 5 - Was DMS able to migrate the view under HR schema?
    
    - select VIEW_NAME from dba_views where owner ='HR';
 
    If not, why not?
 
-   ###### There is a way to migrate views from Oracle? How?
+   ###### 6 - There is a way to migrate views from Oracle? How?
 
-   ###### Can ongoing changes(CDC) be enabled for a view?
-
+   ###### 7 - Can ongoing changes(CDC) be enabled for a view?
+   
+   ###### 8 - Insert some data on the source after full load finish to make sure CDC is working.
+   
+   ###### 9 - What happens when you drop a table on source? will the table be removed on target as well?
+   
+   ###### 10 - Create a table manually under HR schema and include this table on the DMS Task. Make sure table was migrated to the target.
 
 
    # Thank you for your hard work. :thumbsup: :clap: :muscle:
