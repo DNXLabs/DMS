@@ -292,6 +292,7 @@ The scripts oracle.sh and mysql.sh are configured with the credentials to access
 This is going to download the files on the home directory:
 
 hr_cre.sql
+
 hr_popul.sql
 
 After download the files,
@@ -307,6 +308,7 @@ SQL> alter user HR quota unlimited on USERS;
 SQL> ALTER SESSION SET CURRENT_SCHEMA = HR;
 
 SQL> @hr_cre.sql
+
 SQL> @hr_popul.sql
 
 To confirm the tables were created under HR account you can run the following:
