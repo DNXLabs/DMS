@@ -229,28 +229,7 @@ Run test: Connection should be successfull
  ```
 
 
-
-## 8 - Enable pre requirements on the RDS Source
-
-Before create DMS Tasks, you have to go through the AWS Documentation and make sure
-Source and Target have the pre requirements 
-
-For the source Oracle database, please refer to the section "Working with an Amazon-Managed Oracle Database as a Source for AWS DMS"
-on the link below:
-Oracle as a Source: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.Oracle.html
-
-Since the user on the endpoint is the RDS Master User, you don't need to grant the privileges on section "User Account Privileges Required on an Amazon-Managed Oracle Source for AWS DMS
-"
-You have just to follow steps on the section: "Configuring an Amazon-Managed Oracle Source for AWS DMS"
-nothing else.
-
-
-For the target you don't need to configure anything, we are already using RDS Master User which has all the privileges to insert data.
-The documentation is just for reference: 
-Mysql as a target: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.MySQL.html
-
-
-## 9 - Connect to the EC2 Instance
+## 8 - Connect to the EC2 Instance
 
 Once we have source and target already configured to use DMS, we need populate some data on the source
 and then migrate the data to the target using DMS.
@@ -283,6 +262,28 @@ Once connect using ec2-user, go to the root account:
 sudo su -
 
 The scripts oracle.sh and mysql.sh are configured with the credentials to access RDS Oracle and RDS Mysql Instances.
+
+
+## 9 - Enable pre requirements on the RDS Source
+
+Before create DMS Tasks, you have to go through the AWS Documentation and make sure
+Source and Target have the pre requirements 
+
+For the source Oracle database, please refer to the section "Working with an Amazon-Managed Oracle Database as a Source for AWS DMS"
+on the link below:
+Oracle as a Source: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.Oracle.html
+
+Since the user on the endpoint is the RDS Master User, you don't need to grant the privileges on section "User Account Privileges Required on an Amazon-Managed Oracle Source for AWS DMS
+"
+You have just to follow steps on the section: "Configuring an Amazon-Managed Oracle Source for AWS DMS"
+nothing else.
+
+
+For the target you don't need to configure anything, we are already using RDS Master User which has all the privileges to insert data.
+The documentation is just for reference: 
+Mysql as a target: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.MySQL.html
+
+
 
 
 ## 10 - Inserting data on source:
