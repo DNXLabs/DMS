@@ -1,7 +1,7 @@
 # L2H_DMS_event
 Repository for AWS L2H DMS event
 
-# 2 Day
+# Day 2
 
 **1 - Please inform your AWS Account ID to the instructor in order to whitelist your account.**
 
@@ -67,7 +67,7 @@ and launch the stack below:
   *Please note the DMS Tasks should be created manually.
   
   
-  # 3 Day - Challenge Day :muscle:
+  # Day 3 - Challenge Day :muscle:
 
 For today we expect you to be able to create DMS Replication Instance, DMS Endpoints
 and DMS tasks manually.
