@@ -115,8 +115,9 @@ inform this file when launching the cloudformation stack.
 
 The time the stack takes to complete is about 15 - 20 minutes.
 
-## 4 - Once the cloudformation stack was completed, 
-you can start creating DMS Resources
+## 4 - Start Creating DMS Resources
+
+Once the cloudformation stack was completed, you can start creating DMS Resources
 
 You have two options to create resources:
 Using the console or using CLI(Command Line Interface).
@@ -224,9 +225,10 @@ Run test: Connection should be successfull
 
 
 
-## 8 - Before create DMS Tasks, you have to go through the AWS Documentation and make sure
-Source and Target have the pre requirements 
+## 8 - Enable pre requirements on the RDS Source
 
+Before create DMS Tasks, you have to go through the AWS Documentation and make sure
+Source and Target have the pre requirements 
 
 For the source Oracle database, please refer to the section "Working with an Amazon-Managed Oracle Database as a Source for AWS DMS"
 on the link below:
@@ -238,12 +240,14 @@ You have just to follow steps on the section: "Configuring an Amazon-Managed Ora
 nothing else.
 
 
-For the target you don't need to configure anything, we are already using RDS Master User which has all the priviles to insert data.
-The documentation is just for reference: Mysql as a target: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.MySQL.html
+For the target you don't need to configure anything, we are already using RDS Master User which has all the privileges to insert data.
+The documentation is just for reference: 
+Mysql as a target: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.MySQL.html
 
 
+## 9 - Connect to the EC2 Instance
 
-## 9 - Once we have source and target already configured to use DMS, we need populate some data on the source
+Once we have source and target already configured to use DMS, we need populate some data on the source
 and then migrate the data to the target using DMS.
 
 You have to first access the EC2 Instance:
@@ -379,7 +383,7 @@ on the link below ?
 
    ###### Are you able to find the data on RDS Mysql target?
 
-   ###### Was the tables created in Upper case or lower case? Why?
+   ###### Were the tables created in UPPER CASE or lower case? Why?
 
    ###### Do you think any transformation rule should be created to migrate tables in lower case?
 
@@ -394,7 +398,7 @@ on the link below ?
 
    ###### There is a way to migrate views from Oracle? How?
 
-   ###### Can ongoing changes be migrated for a view?
+   ###### Can ongoing changes(CDC) be enabled for a view?
 
 
 
