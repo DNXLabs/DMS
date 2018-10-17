@@ -67,7 +67,7 @@ and launch the stack below:
   *Please note the DMS Tasks should be created manually.
   
   
-  # 3 Day - Challenge Day
+  # 3 Day - Challenge Day :muscle:
 
 For today we expect you to be able to create DMS Replication Instance, DMS Endpoints
 and DMS tasks manually.
