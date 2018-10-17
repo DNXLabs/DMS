@@ -286,6 +286,7 @@ The scripts oracle.sh and mysql.sh are configured with the credentials to access
  On the home directory of the root account, you should run:
 
  wget https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/data/hr_cre.sql
+ 
  wget https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/data/hr_popul.sql
 
 This is going to download the files on the home directory:
