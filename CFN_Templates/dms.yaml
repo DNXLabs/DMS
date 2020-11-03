@@ -16,7 +16,7 @@ Resources:
     Properties:
       CidrBlock: 10.0.16.0/20
       MapPublicIpOnLaunch: true
-      AvailabilityZone : us-east-1a
+      AvailabilityZone : ap-southeast-2a
       VpcId:
         Ref: VPC
   PublicSubnet2:
@@ -24,7 +24,7 @@ Resources:
     Properties:
       CidrBlock: 10.0.0.0/20
       MapPublicIpOnLaunch: true
-      AvailabilityZone : us-east-1b
+      AvailabilityZone : ap-southeast-2b
       VpcId:
         Ref: VPC
   IGW:
@@ -402,7 +402,7 @@ Resources:
         -
           VPCId: 
             Ref: VPC
-          VPCRegion: "us-east-1"
+          VPCRegion: "ap-southeast-2"
   RDSOracleDNSRecord:
     Type: AWS::Route53::RecordSet
     Properties:
