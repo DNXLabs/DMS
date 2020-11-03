@@ -1,6 +1,6 @@
-# AWS Learn to Hire - DMS Event
+# AWS DMS Training
 
-Repository for AWS L2H DMS event
+Repository for AWS DMS Training
 
 # Day 2
 
