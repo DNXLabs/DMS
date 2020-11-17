@@ -97,8 +97,34 @@ Once connect using ec2-user, connect to either mysql or postgresql instance:
 
 The scripts mysql.sh and pg.sh are configured with the credentials to access RDS Mysql and RDS PostgreSQL instances.
 
+## 5 - Inserting data on source:
 
-## 4 - Start Creating DMS Resources
+ Connect to the RDS Mysql:
+
+ . mysql.sh 
+
+And then create the user and insert data running the commands from the following repository:
+
+https://github.com/aws-samples/aws-database-migration-samples/tree/master/mysql/sampledb/v1
+
+To confirm the tables were created under dms_user schema you can run the following:
+
+SQL> select table_name from dba_tables where owner = 'dms_user';
+
+## 6 - Enable pre requirements on the RDS Source
+
+Before create DMS Tasks, you have to go through the AWS Documentation and make sure
+Source and Target have the pre requirements 
+
+For the source MySQL database, please refer to the section "Using an AWS-managed MySQL-compatible database as a source for AWS DMS"
+on the link below:
+Mysql as a Source: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.AmazonManaged
+
+For the target you don't need to configure anything, we are already using RDS Master User which has all the privileges to insert data.
+The documentation is just for reference: 
+PostgreSQL as a target: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.PostgreSQL.html
+
+## 7 - Start Creating DMS Resources
 
 Once the cloudformation stack was completed, you can start creating DMS Resources
 
@@ -107,68 +133,12 @@ Using the console or using CLI(Command Line Interface).
 I would recommend use the console if you are doing it for the first time
 following the steps below:
 
-## 5 - Go to the DMS Console 
+## 8 - Go to the DMS Console 
 
  https://console.aws.amazon.com/dms/home
 
-## 9 - Enable pre requirements on the RDS Source
 
-Before create DMS Tasks, you have to go through the AWS Documentation and make sure
-Source and Target have the pre requirements 
-
-For the source Oracle database, please refer to the section "Working with an Amazon-Managed Oracle Database as a Source for AWS DMS"
-on the link below:
-Oracle as a Source: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.Oracle.html
-
-Since the user on the endpoint is the RDS Master User, you don't need to grant the privileges on section "User Account Privileges Required on an Amazon-Managed Oracle Source for AWS DMS
-"
-You have just to follow steps on the section: "Configuring an Amazon-Managed Oracle Source for AWS DMS"
-nothing else.
-
-
-For the target you don't need to configure anything, we are already using RDS Master User which has all the privileges to insert data.
-The documentation is just for reference: 
-Mysql as a target: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.MySQL.html
-
-
-
-
-## 10 - Inserting data on source:
-
- On the home directory of the root account, you should run:
-
- wget https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/data/hr_cre.sql
- 
- wget https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/data/hr_popul.sql
-
-This is going to download the files on the home directory:
-
-hr_cre.sql
-
-hr_popul.sql
-
-After download the files,
-Connect to the RDS Oracle:
-
- . oracle.sh 
-
-And then create the user and insert data running the commands below:
-
-SQL> create user HR identified by HR;
-SQL> alter user HR quota unlimited on USERS;
-
-SQL> ALTER SESSION SET CURRENT_SCHEMA = HR;
-
-SQL> @hr_cre.sql
-
-SQL> @hr_popul.sql
-
-To confirm the tables were created under HR account you can run the following:
-
-SQL> select table_name from dba_tables where owner = 'HR';
-
-
-## 11 - Creating DMS task:
+## 10 - Creating DMS task:
 
 ```
 Go to the DMS Console 
@@ -187,8 +157,8 @@ For This Option	                  - Do This
 Task name                           - Type a name for the task.
 
 Task description                    - Type a description for the task.
-Source endpoint                     - rdsoracle-source
-Target endpoint                     - rdsmysql-target
+Source endpoint                     - rdsmysql-source
+Target endpoint                     - rdspostgresql-target
 Replication instance                - Select the  Replication Instance you have created
 Migration type                      - Migrate Existent Data and Replicate Ongoing changes
 Start task on create                - Yes
@@ -205,9 +175,9 @@ Table Mappings:
 
 Selection rules: 
 
-Schema name is: HR
+Schema name is: dms_source
 
-If the HR schema is not on the list, you should go to the DMS Endpoint and click on Refresh Schemas
+If the dms_source schema is not on the list, you should go to the DMS Endpoint and click on Refresh Schemas
 or click on Select Schema and manually inform: HR
 Table name is like - %
 Action - Include
@@ -225,19 +195,19 @@ For more information, please refer: https://docs.aws.amazon.com/dms/latest/userg
 
 
 
-## 12 - You should be able to answer the following questions:
+## 11 - You should be able to answer the following questions:
 
 
    ###### 1 - Was the task complete without any errors?
    
-   *** :confused: If there is a error, have you followed the steps on the section "Working with an Amazon-Managed Oracle Database as a Source for AWS DMS"
+   *** :confused: If there is a error, have you followed the steps on the section "Using an AWS-managed MySQL-compatible database as a source for AWS DMS"
 on the link below ?
-    Oracle as a Source: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.Oracle.html
+    MySQL as a Source: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.AmazonManaged
 
     Once you have fixed the error, you can restart the task
     Click on Start/Resume - Restart***
 
-   ###### 2 - Are you able to find the data on RDS Mysql target?
+   ###### 2 - Are you able to find the data on RDS PostgreSQL target?
 
    ###### 3 - Were the tables created in UPPER CASE or lower case? Why?
 
@@ -246,13 +216,16 @@ on the link below ?
      https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.html
 
    
-  ###### 5 - Was DMS able to migrate the view under HR schema?
+  ###### 5 - Was DMS able to migrate the view under dms_source schema?
    
-   - select VIEW_NAME from dba_views where owner ='HR';
+   - SELECT TABLE_SCHEMA, TABLE_NAME 
+     FROM information_schema.tables 
+     WHERE TABLE_TYPE LIKE 'VIEW'
+       AND TABLE_SCHEMA = 'dms_source';
 
    If not, why not?
 
-   ###### 6 - There is a way to migrate views from Oracle? How?
+   ###### 6 - There is a way to migrate views from Mysql? How?
 
    ###### 7 - Can ongoing changes(CDC) be enabled for a view?
    
@@ -260,7 +233,7 @@ on the link below ?
    
    ###### 9 - What happens when you drop a table on source? will the table be removed on target as well?
    
-   ###### 10 - Create a table manually under HR schema and include this table on the DMS Task. Make sure table was migrated to the target.
+   ###### 10 - Create a table manually under dms_source schema and include this table on the DMS Task. Make sure table was migrated to the target.
 
 
    # Thank you for your hard work. :thumbsup: :clap: :muscle:
