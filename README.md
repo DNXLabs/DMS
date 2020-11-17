@@ -162,9 +162,9 @@ On the Create Task page, specify the task options.
 For This Option	                  - Do This
 Task name                           - Type a name for the task. (I would suggest DMSTASK + Your name)
 Task description                    - Type a description for the task.
-Source endpoint                     - rdsmysql-source
-Target endpoint                     - rdspostgresql-target
-Replication instance                - Select the  Replication Instance you have created
+Source endpoint                     - sourcerdsmysql
+Target endpoint                     - targetrdspostgresql
+Replication instance                - Select the Replication Instance you have created
 Migration type                      - Migrate Existent Data and Replicate Ongoing changes
 Start task on create                - Yes
 CDC stop mode                       - Don't use custom CDC stop mode
