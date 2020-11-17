@@ -59,6 +59,7 @@ and launch the stack below:
   - DMS Endpoints
   - Route 53 Domain
   - Route R3 RecordSets
+  - IAM Roles
   - EC2 Instance (with all the clients pre configured)
   
   *Please note the DMS Tasks should be created manually.
