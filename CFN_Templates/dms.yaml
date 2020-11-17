@@ -86,31 +86,31 @@ Resources:
       SubnetIds:
       - Ref: PublicSubnet1
       - Ref: PublicSubnet2
-  RDSOracle:
-    Type: AWS::RDS::DBInstance
-    Properties:
-      AllocatedStorage: 50
-      AutoMinorVersionUpgrade: 'false'
-      VPCSecurityGroups:
-      - Ref: InstanceSecurityGroup
-      DBInstanceIdentifier: RDSOracle
-      DBName: ORCL 
-      DBInstanceClass: db.t2.medium
-      DBSubnetGroupName: 
-        Ref: MyDBSubnetGroup
-      Engine: oracle-ee
-      EngineVersion: 12.1.0.2.v12
-      MasterUsername: root
-      MasterUserPassword: Root1234
-      StorageType: gp2
-      BackupRetentionPeriod: 7
-      DBParameterGroupName:
-        Ref: MyRDSOracleParamGroup
-  MyRDSOracleParamGroup:
-    Type: AWS::RDS::DBParameterGroup
-    Properties:
-      Family: oracle-ee-12.1
-      Description: Oracle Custom Database Parameter Group
+  # RDSOracle:
+  #   Type: AWS::RDS::DBInstance
+  #   Properties:
+  #     AllocatedStorage: 50
+  #     AutoMinorVersionUpgrade: 'false'
+  #     VPCSecurityGroups:
+  #     - Ref: InstanceSecurityGroup
+  #     DBInstanceIdentifier: RDSOracle
+  #     DBName: ORCL 
+  #     DBInstanceClass: db.t2.medium
+  #     DBSubnetGroupName: 
+  #       Ref: MyDBSubnetGroup
+  #     Engine: oracle-se
+  #     EngineVersion: 12.1.0.2.v12
+  #     MasterUsername: root
+  #     MasterUserPassword: Root1234
+  #     StorageType: gp2
+  #     BackupRetentionPeriod: 7
+  #     DBParameterGroupName:
+  #       Ref: MyRDSOracleParamGroup
+  # MyRDSOracleParamGroup:
+  #   Type: AWS::RDS::DBParameterGroup
+  #   Properties:
+  #     Family: oracle-ee-12.1
+  #     Description: Oracle Custom Database Parameter Group
   RDSMySQL:
     Type: AWS::RDS::DBInstance
     Properties:
@@ -202,28 +202,28 @@ Resources:
       SubnetIds:
       - Ref: PublicSubnet1
       - Ref: PublicSubnet2
-  RedshiftCluster:
-    Type: "AWS::Redshift::Cluster"
-    Properties: 
-      ClusterIdentifier: RedshiftCluster
-      ClusterParameterGroupName: 
-         Ref: myClusterParameterGroup
-      ClusterSubnetGroupName: 
-        Ref: MyClusterSubnetGroup
-      ClusterType: single-node
-      DBName: dms
-      MasterUsername: root
-      MasterUserPassword: Root1234
-      NodeType: dc1.large
-      Port: 5439
-      PubliclyAccessible: yes
-      VpcSecurityGroupIds:
-        - Ref: InstanceSecurityGroup
-  myClusterParameterGroup: 
-    Type: "AWS::Redshift::ClusterParameterGroup"
-    Properties: 
-      Description: "Redshift Cluster parameter group"
-      ParameterGroupFamily: "redshift-1.0"
+  # RedshiftCluster:
+  #   Type: "AWS::Redshift::Cluster"
+  #   Properties: 
+  #     ClusterIdentifier: RedshiftCluster
+  #     ClusterParameterGroupName: 
+  #        Ref: myClusterParameterGroup
+  #     ClusterSubnetGroupName: 
+  #       Ref: MyClusterSubnetGroup
+  #     ClusterType: single-node
+  #     DBName: dms
+  #     MasterUsername: root
+  #     MasterUserPassword: Root1234
+  #     NodeType: dc2.large
+  #     Port: 5439
+  #     PubliclyAccessible: yes
+  #     VpcSecurityGroupIds:
+  #       - Ref: InstanceSecurityGroup
+  # myClusterParameterGroup: 
+  #   Type: "AWS::Redshift::ClusterParameterGroup"
+  #   Properties: 
+  #     Description: "Redshift Cluster parameter group"
+  #     ParameterGroupFamily: "redshift-1.0"
   DMSVPCRole:
     Type: AWS::IAM::Role
     Properties:
@@ -289,7 +289,7 @@ Resources:
       ReplicationSubnetGroupIdentifier:
         Ref: ReplicationSubnetGroup
       PubliclyAccessible: 'false'
-      EngineVersion: 2.4.3
+      EngineVersion: 3.4.2
       MultiAZ: 'false'
   SourceMySQLEndpoint:
     Type: AWS::DMS::Endpoint
@@ -304,20 +304,20 @@ Resources:
       Port:
         Fn::GetAtt: [ RDSMySQL, Endpoint.Port ]
       DatabaseName: dms
-  SourceOracleEndpoint:
-    Type: AWS::DMS::Endpoint
-    Properties:
-      EngineName: oracle
-      EndpointIdentifier: SourceRDSOracle
-      EndpointType: source
-      Username: root
-      Password: Root1234
-      ServerName:
-        Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
-      Port:
-        Fn::GetAtt: [ RDSOracle, Endpoint.Port ]
-      DatabaseName: ORCL
-      ExtraConnectionAttributes: addSupplementalLogging=Y;useLogminerReader=Y
+  # SourceOracleEndpoint:
+  #   Type: AWS::DMS::Endpoint
+  #   Properties:
+  #     EngineName: oracle
+  #     EndpointIdentifier: SourceRDSOracle
+  #     EndpointType: source
+  #     Username: root
+  #     Password: Root1234
+  #     ServerName:
+  #       Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
+  #     Port:
+  #       Fn::GetAtt: [ RDSOracle, Endpoint.Port ]
+  #     DatabaseName: ORCL
+  #     ExtraConnectionAttributes: addSupplementalLogging=Y;useLogminerReader=Y
   SourceSQLServerEndpoint:
     Type: AWS::DMS::Endpoint
     Properties:
@@ -344,19 +344,19 @@ Resources:
       Port:
         Fn::GetAtt: [ RDSSQLServer, Endpoint.Port ]
       DatabaseName: dms
-  TargetOracleEndpoint:
-    Type: AWS::DMS::Endpoint
-    Properties:
-      EngineName: oracle
-      EndpointIdentifier: TargetRDSOracle
-      EndpointType: target
-      Username: root
-      Password: Root1234
-      ServerName:
-        Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
-      Port:
-        Fn::GetAtt: [ RDSOracle, Endpoint.Port ]
-      DatabaseName: ORCL
+  # TargetOracleEndpoint:
+  #   Type: AWS::DMS::Endpoint
+  #   Properties:
+  #     EngineName: oracle
+  #     EndpointIdentifier: TargetRDSOracle
+  #     EndpointType: target
+  #     Username: root
+  #     Password: Root1234
+  #     ServerName:
+  #       Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
+  #     Port:
+  #       Fn::GetAtt: [ RDSOracle, Endpoint.Port ]
+  #     DatabaseName: ORCL
   TargetPostgreSQLEndpoint:
     Type: AWS::DMS::Endpoint
     Properties:
@@ -370,19 +370,19 @@ Resources:
       Port:
         Fn::GetAtt: [ RDSPostgreSQL, Endpoint.Port ]
       DatabaseName: dms
-  TargetRedshiftEndpoint:
-    Type: AWS::DMS::Endpoint
-    Properties:
-      EngineName: redshift
-      EndpointIdentifier: TargetRedshift
-      EndpointType: target
-      Username: root
-      Password: Root1234
-      ServerName:
-        Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
-      Port:
-        Fn::GetAtt: [ RedshiftCluster, Endpoint.Port ]
-      DatabaseName: dms
+  # TargetRedshiftEndpoint:
+  #   Type: AWS::DMS::Endpoint
+  #   Properties:
+  #     EngineName: redshift
+  #     EndpointIdentifier: TargetRedshift
+  #     EndpointType: target
+  #     Username: root
+  #     Password: Root1234
+  #     ServerName:
+  #       Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
+  #     Port:
+  #       Fn::GetAtt: [ RedshiftCluster, Endpoint.Port ]
+  #     DatabaseName: dms
   TargetS3Endpoint:
     Type: AWS::DMS::Endpoint
     Properties:
@@ -397,28 +397,28 @@ Resources:
   DNS: 
     Type: "AWS::Route53::HostedZone"
     Properties: 
-      Name: 'l2hdms.com'
+      Name: 'dms.com'
       VPCs: 
         -
           VPCId: 
             Ref: VPC
           VPCRegion: "ap-southeast-2"
-  RDSOracleDNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref 'DNS'
-      Comment: 'DNS name for my instance.'
-      Name: 'rdsoracle.l2hdms.com.'
-      Type: CNAME
-      TTL: '30'
-      ResourceRecords: 
-        - Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
+  # RDSOracleDNSRecord:
+  #   Type: AWS::Route53::RecordSet
+  #   Properties:
+  #     HostedZoneId: !Ref 'DNS'
+  #     Comment: 'DNS name for my instance.'
+  #     Name: 'rdsoracle.l2hdms.com.'
+  #     Type: CNAME
+  #     TTL: '30'
+  #     ResourceRecords: 
+  #       - Fn::GetAtt: [ RDSOracle, Endpoint.Address ]
   RDSMySQLDNSRecord:
     Type: AWS::Route53::RecordSet
     Properties:
       HostedZoneId: !Ref 'DNS'
       Comment: 'DNS name for my instance.'
-      Name: 'rdsmysql.l2hdms.com.'
+      Name: 'rdsmysql.dms.com.'
       Type: CNAME
       TTL: '30'
       ResourceRecords: 
@@ -428,7 +428,7 @@ Resources:
     Properties:
       HostedZoneId: !Ref 'DNS'
       Comment: 'DNS name for my instance.'
-      Name: 'rdspostgresql.l2hdms.com.'
+      Name: 'rdspostgresql.dms.com.'
       Type: CNAME
       TTL: '30'
       ResourceRecords: 
@@ -438,27 +438,27 @@ Resources:
     Properties:
       HostedZoneId: !Ref 'DNS'
       Comment: 'DNS name for my instance.'
-      Name: 'rdssqlserver.l2hdms.com.'
+      Name: 'rdssqlserver.dms.com.'
       Type: CNAME
       TTL: '30'
       ResourceRecords: 
         - Fn::GetAtt: [ RDSSQLServer, Endpoint.Address ]
-  RedshiftDNSRecord:
-    Type: AWS::Route53::RecordSet
-    Properties:
-      HostedZoneId: !Ref 'DNS'
-      Comment: 'DNS name for my instance.'
-      Name: 'redshiftcluster.l2hdms.com.'
-      Type: CNAME
-      TTL: '30'
-      ResourceRecords: 
-        - Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
+  # RedshiftDNSRecord:
+  #   Type: AWS::Route53::RecordSet
+  #   Properties:
+  #     HostedZoneId: !Ref 'DNS'
+  #     Comment: 'DNS name for my instance.'
+  #     Name: 'redshiftcluster.dms.com.'
+  #     Type: CNAME
+  #     TTL: '30'
+  #     ResourceRecords: 
+  #       - Fn::GetAtt: [ RedshiftCluster, Endpoint.Address ]
   EC2Instance:
     Type: AWS::EC2::Instance
     Properties:
       InstanceType: t2.micro
       KeyName: !Ref 'KeyName'
-      ImageId: ami-0943e43d0ba3e33eb
+      ImageId: ami-0f96495a064477ffb
       NetworkInterfaces: 
         - AssociatePublicIpAddress: "true"
           DeviceIndex: "0"
@@ -466,10 +466,19 @@ Resources:
             - Ref: "EC2InstanceSecurityGroup"
           SubnetId: 
             Ref: "PublicSubnet1"
+      UserData:
+        Fn::Base64: 
+            |
+            #!/bin/bash
+            yum update -y 
+            yum install mysql -y 
+            amazon-linux-extras install postgresql10 -y 
+            echo "mysql -h rdsmysql.dms.com -uroot -pRoot1234" > /home/ec2-user/mysql.sh
+            echo "psql -d 'host=rdspostgresql.dms.com port=5432 dbname=postgres user=root password=Root1234'" > /home/ec2-user/pg.sh
       Tags:
         -
           Key: Name
-          Value: Clients
+          Value: DMSClients
   EC2InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:
@@ -482,20 +491,20 @@ Resources:
         ToPort: 22
         CidrIp: 54.240.0.0/16 
 Outputs:
-  RDSOracleEndpoint:
-    Description: RDS Oracle Endpoint
-    Value:
-      Fn::Join:
-      - ''
-      - - 'endpoint:'
-        - Fn::GetAtt:
-          - RDSOracle
-          - Endpoint.Address
-        - ":"
-        - Fn::GetAtt:
-          - RDSOracle
-          - Endpoint.Port
-        - "/"
+  # RDSOracleEndpoint:
+  #   Description: RDS Oracle Endpoint
+  #   Value:
+  #     Fn::Join:
+  #     - ''
+  #     - - 'endpoint:'
+  #       - Fn::GetAtt:
+  #         - RDSOracle
+  #         - Endpoint.Address
+  #       - ":"
+  #       - Fn::GetAtt:
+  #         - RDSOracle
+  #         - Endpoint.Port
+  #       - "/"
   RDSMySQLEndpoint:
     Description: RDS MySQL Endpoint
     Value:
@@ -540,20 +549,20 @@ Outputs:
         - "/"
   BucketName:
     Value: !Ref 'S3Bucket'
-  RedshiftEndpoint:
-    Description: Redshift Endpoint
-    Value:
-     Fn::Join:
-      - ''
-      - - 'endpoint:'
-        - Fn::GetAtt:
-          - RedshiftCluster
-          - Endpoint.Address
-        - ":"
-        - Fn::GetAtt:
-          - RedshiftCluster
-          - Endpoint.Port
-        - "/"
+  # RedshiftEndpoint:
+  #   Description: Redshift Endpoint
+  #   Value:
+  #    Fn::Join:
+  #     - ''
+  #     - - 'endpoint:'
+  #       - Fn::GetAtt:
+  #         - RedshiftCluster
+  #         - Endpoint.Address
+  #       - ":"
+  #       - Fn::GetAtt:
+  #         - RedshiftCluster
+  #         - Endpoint.Port
+  #       - "/"
   DMSReplicationInstanceARN:
     Description: Name of the DMS Replication Instance
     Value:
