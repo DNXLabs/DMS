@@ -207,7 +207,7 @@ For more information, please refer: https://docs.aws.amazon.com/dms/latest/userg
 ## 11 - You should be able to answer the following questions:
 
 
-   ###### 1 - Was the task complete without any errors?
+   ###### 1 - Was the task completed without any errors?
    
    *** :confused: If there is a error, have you followed the steps on the section "Using an AWS-managed MySQL-compatible database as a source for AWS DMS"
 on the link below ?
