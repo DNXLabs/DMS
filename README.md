@@ -54,7 +54,6 @@ and launch the stack below:
   - RDS MySQL
   - RDS SQLServer
   - RDS PostgreSQL
-  - Redshift Cluster
   - S3 Bucket
   - DMS Replication Instance
   - DMS Endpoints
