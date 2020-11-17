@@ -160,7 +160,7 @@ To create a migration task
 On the Create Task page, specify the task options.
 
 For This Option	                  - Do This
-Task name                           - Type a name for the task.
+Task name                           - Type a name for the task. (I would suggest DMSTASK + Your name)
 Task description                    - Type a description for the task.
 Source endpoint                     - rdsmysql-source
 Target endpoint                     - rdspostgresql-target
@@ -189,7 +189,11 @@ Action - Include
 
 - Add Selection Rule
 
-Transformation rules - No
+Transformation rules - Yes
+
+Target: Schema
+Schema_name: dms_sample
+Action: Rename to: (I would suggest dms_target + Your name)
 
 - Create Task
 
