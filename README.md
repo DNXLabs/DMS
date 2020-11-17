@@ -4,15 +4,13 @@ Repository for AWS DMS Training
 
 # Day 2
 
-**1 - Please inform your AWS Account ID to the instructor in order to whitelist your account.**
-
-**2 - Log in to your AWS Account**
+**1 - Log in to your AWS Account**
 
 https://aws.amazon.com/console/
 
-And select us-east-1 Region (N.Virginia).
+And select ap-southeast-2 Region (Sydney).
 
-**3 - Create Key Pair Manually following the steps below:**
+**2 - Create Key Pair Manually following the steps below:**
 
    - Open the Amazon EC2 console at https://console.aws.amazon.com/ec2/.
    - In the navigation pane, under NETWORK & SECURITY, choose Key Pairs.
@@ -43,7 +41,7 @@ https://console.aws.amazon.com/cloudformation/home
 
 and launch the stack below:
 
-[Cloudformation Template](https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/dms.yaml).
+[Cloudformation Template](https://raw.githubusercontent.com/maiconrocha/DMX/master/CFN_Templates/dms.yaml).
 
 
   *You should choose a name for the stack and specify the key pair you previously launched
@@ -53,7 +51,6 @@ and launch the stack below:
   - VPC(10.0.0.0/16)
   - Subnets
   - IGW
-  - RDS Oracle
   - RDS MySQL
   - RDS SQLServer
   - RDS PostgreSQL
@@ -66,170 +63,9 @@ and launch the stack below:
   - EC2 Instance (with all the clients pre configured)
   
   *Please note the DMS Tasks should be created manually.
-  
-  
-  # Day 3 - Challenge Day :muscle:
-
-For today we expect you to be able to create DMS Replication Instance, DMS Endpoints
-and DMS tasks manually.
-
-All the infrastructure needed as a pre requirement to create DMS resources
-will be created by the cloudformation template below
-
-[challenge.yaml](https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/challenge.yaml).
-
-This cloudformation stack is going to create the following AWS Resources in your account:
-
-- VPC(10.0.0.0/16)
-- Subnets
-- IGW
-- RDS Oracle
-- RDS MySQL
-- Route 53 Domain
-- Route R3 RecordSets
-- EC2 Instance (with all the clients pre configured)
-
-So, you need to go through the following steps:
-
-## 1 - Login to AWS Console in us-east-1(N.Virginia) region:
-
- https://aws.amazon.com/console/
-
-## 2 - Make sure you have pre created a Key Pair. (You can use the same you created yesterday)
-
- If you are using windows you probably need convert your pem file to ppk file following the steps below:
-
- https://aws.amazon.com/premiumsupport/knowledge-center/convert-pem-file-into-ppk/
-
-Reference: https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
-
-## 3 - Access the Cloudformation Console:
-
- https://console.aws.amazon.com/cloudformation/home
-
-and launch the stack below:
-
-[challenge.yaml](https://raw.githubusercontent.com/maiconrocha/L2H_DMS_event/master/CFN_Templates/challenge.yaml).
-
-You should save the file on your local machine and then 
-inform this file when launching the cloudformation stack.
-
-The time the stack takes to complete is about 15 - 20 minutes.
-
-***You don't need to wait until Cloudformation Finish to go to the next steps. 
-As soon the RDS Oracle and RDS Mysql are in the creation process you can go to the step 4.***
 
 
-## 4 - Start Creating DMS Resources
-
-Once the cloudformation stack was completed, you can start creating DMS Resources
-
-You have two options to create resources:
-Using the console or using CLI(Command Line Interface).
-I would recommend use the console if you are doing it for the first time
-following the steps below:
-
-## 5 - Go to the DMS Console 
-
- https://console.aws.amazon.com/dms/home
-
-## 6 - Creating Replication Instance
-
-```
-- On the left menu, click on Replication Instance
-- Click on 'Create Replication Instance'
-
-For This Option             - Do This
-
-Name                        - Type a name for the replication instance that contains from 8 to 16 printable ASCII characters (excluding /,", and @).
-Description                 - Type a brief description of the replication instance.
-Instance class  		       - dms.t2.medium
-Replication engine version  - 2.4.3
-VPC                         - Choose the Amazon Virtual Private Cloud (Amazon VPC) which was created by the cloudformation. Should be the VPC with longer characters. If you are not sure go to VPC console(https://console.aws.amazon.com/dms) and find the VPC ID for CIDR (10.0.0.0/16).
-
-Multi-AZ                    - no
-Publicly accessible         - no
-
-Advanced:
-
-Allocated storage (GB)      - 50 GB
-Replication Subnet Group    - dms-subnet-group
-Availability zone           - no preference
-VPC Security Group(s)       -  You should select the security group which have the string 'InstanceSecurityGroup' 
-KMS master Key              - Use the default
-
-Maintenance:
-
-Leave the default
-
-- Click on create Replication Instance
-```
-
-
-If you would like more information,
-please refer to the section "Creating a Replication Instance" on the link: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_ReplicationInstance.html
-
-
-
-## 7 - Once the Replication Instance is created, you can start creating the DMS Endpoints:
-
-```
-- On the left menu, click on 'Endpoints'
-- Create Endpoint
-
-Creating the Source Endpoint:
-
-- Endpoint type : Source
-- Select RDS DB Instance: rdsoracle
-- Endpoint identifier: rdsoracle-source
-- Source engine - Oracle
-- Server Name - Leave the option automatic filled
-- Port: 1521
-- User name: root
-- Password: Root1234
-- SID/Service Name: ORCL
-
-Test Endpoint connection:
-
-
-VPC: Choose the Amazon Virtual Private Cloud (Amazon VPC) which was created by the cloudformation. Should be the VPC with longer characters. If you are not sure go to VPC console(https://console.aws.amazon.com/dms) and find the VPC ID for CIDR (10.0.0.0/16).
-
-
-Replication Instance: Select the  Replication Instance you have created
-
-Run test: Connection should be successfull
-
-- Save
-```
-
-```
-
-Creating the Target Endpoint:
-
-- Endpoint type : Target
-- Select RDS DB Instance: rdsmysql
-- Endpoint identifier: rdsmysql-target
-- Source engine - mysql
-- Server Name - Leave the option automatic filled
-- Port: 3306
-- SSL Mode; none
-- User name: root
-- Password: Root1234
-
-Test Endpoint connection:
-
-
-VPC: Choose the Amazon Virtual Private Cloud (Amazon VPC) which was created by the cloudformation. Should be the VPC with longer characters. If you are not sure go to VPC console(https://console.aws.amazon.com/dms) and find the VPC ID for CIDR (10.0.0.0/16).
-
-Replication Instance: Select the  Replication Instance you have created
-
-Run test: Connection should be successfull
-
-- Save
- ```
-
-
-## 8 - Connect to the EC2 Instance
+## 4 - Connect to the EC2 Instance
 
 Once we have source and target already configured to use DMS, we need populate some data on the source
 and then migrate the data to the target using DMS.
@@ -257,12 +93,23 @@ Now, you should be able to connect.
 If you are not sure in how to connect click again on the ec2 instance
 and click on 'Connect' for more instructions.
 
-Once connect using ec2-user, go to the root account:
+Once connect using ec2-user, connect to either mysql or postgresql instance:
 
-sudo su -
+The scripts mysql.sh and pg.sh are configured with the credentials to access RDS Mysql and RDS PostgreSQL instances.
 
-The scripts oracle.sh and mysql.sh are configured with the credentials to access RDS Oracle and RDS Mysql Instances.
 
+## 4 - Start Creating DMS Resources
+
+Once the cloudformation stack was completed, you can start creating DMS Resources
+
+You have two options to create resources:
+Using the console or using CLI(Command Line Interface).
+I would recommend use the console if you are doing it for the first time
+following the steps below:
+
+## 5 - Go to the DMS Console 
+
+ https://console.aws.amazon.com/dms/home
 
 ## 9 - Enable pre requirements on the RDS Source
 
