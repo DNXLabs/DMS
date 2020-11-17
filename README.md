@@ -183,7 +183,7 @@ Selection rules:
 
 Schema name is: dms_sample
 
-If the dms_source schema is not on the list, you should go to the DMS Endpoint and click on Refresh Schemas
+If the dms_sample schema is not on the list, you should go to the DMS Endpoint and click on Refresh Schemas
 or click on Select Schema and manually inform: dms_sample
 Table name is like - %
 Action - Include
