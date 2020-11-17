@@ -152,9 +152,7 @@ To create a migration task
 On the Create Task page, specify the task options.
 
 For This Option	                  - Do This
-
 Task name                           - Type a name for the task.
-
 Task description                    - Type a description for the task.
 Source endpoint                     - rdsmysql-source
 Target endpoint                     - rdspostgresql-target
@@ -177,7 +175,7 @@ Selection rules:
 Schema name is: dms_source
 
 If the dms_source schema is not on the list, you should go to the DMS Endpoint and click on Refresh Schemas
-or click on Select Schema and manually inform: HR
+or click on Select Schema and manually inform: dms_sample
 Table name is like - %
 Action - Include
 
@@ -215,12 +213,12 @@ on the link below ?
      https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.html
 
    
-  ###### 5 - Was DMS able to migrate the view under dms_source schema?
+  ###### 5 - Was DMS able to migrate the view under dms_sample schema?
    
    - SELECT TABLE_SCHEMA, TABLE_NAME 
      FROM information_schema.tables 
      WHERE TABLE_TYPE LIKE 'VIEW'
-       AND TABLE_SCHEMA = 'dms_source';
+       AND TABLE_SCHEMA = 'dms_sample';
 
    If not, why not?
 
@@ -232,7 +230,7 @@ on the link below ?
    
    ###### 9 - What happens when you drop a table on source? will the table be removed on target as well?
    
-   ###### 10 - Create a table manually under dms_source schema and include this table on the DMS Task. Make sure table was migrated to the target.
+   ###### 10 - Create a table manually under dms_sample schema and include this table on the DMS Task. Make sure table was migrated to the target.
 
 
    # Thank you for your hard work. :thumbsup: :clap: :muscle:
