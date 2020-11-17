@@ -41,7 +41,7 @@ https://console.aws.amazon.com/cloudformation/home
 
 and launch the stack below:
 
-[Cloudformation Template](https://raw.githubusercontent.com/maiconrocha/DMX/master/CFN_Templates/dms.yaml).
+[Cloudformation Template](https://raw.githubusercontent.com/maiconrocha/DMS/master/CFN_Templates/dms.yaml).
 
 
   *You should choose a name for the stack and specify the key pair you previously launched
@@ -79,7 +79,7 @@ Allow your IP on the Security Group of the EC2 Instance:
 Go to EC2 Console: 
 https://console.aws.amazon.com/ec2
 
-Select the instance 'Clients'
+Select the instance 'DMSClients'
 Click on the Security Group attached to the Instance
 Click in Inbound
 Edit
