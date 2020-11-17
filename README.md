@@ -220,7 +220,7 @@ on the link below ?
 
    ###### 3 - Were the tables created in UPPER CASE or lower case? Why?
 
-   ###### 4 - Do you think any transformation rule should be created to migrate tables in lower case?
+   ###### 4 - Do you think any transformation rule should be created to migrate tables in upper case?
 
      https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Tasks.CustomizingTasks.TableMapping.html
 
