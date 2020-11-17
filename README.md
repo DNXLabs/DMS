@@ -111,11 +111,11 @@ git clone https://github.com/aws-samples/aws-database-migration-samples
 mysql -h rdsmysql.dms.com -uroot -p < install-rds.sql
 
 To confirm the tables were created under dms_user schema you can run the following:
-
+```
 SQL> SELECT TABLE_SCHEMA, TABLE_NAME 
      FROM information_schema.tables 
      WHERE TABLE_SCHEMA = 'dms_sample';
-
+```
 ## 6 - Enable pre requirements on the RDS Source
 
 Before create DMS Tasks, you have to go through the AWS Documentation and make sure
@@ -123,10 +123,12 @@ Source and Target have the pre requirements
 
 For the source MySQL database, please refer to the section "Using an AWS-managed MySQL-compatible database as a source for AWS DMS"
 on the link below:
+
 Mysql as a Source: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Source.MySQL.html#CHAP_Source.MySQL.AmazonManaged
 
 For the target you don't need to configure anything, we are already using RDS Master User which has all the privileges to insert data.
 The documentation is just for reference: 
+
 PostgreSQL as a target: https://docs.aws.amazon.com/dms/latest/userguide/CHAP_Target.PostgreSQL.html
 
 ## 7 - Start Creating DMS Resources
@@ -220,12 +222,12 @@ on the link below ?
 
    
   ###### 5 - Was DMS able to migrate the view under dms_sample schema?
-   
+ ```  
    - SELECT TABLE_SCHEMA, TABLE_NAME 
      FROM information_schema.tables 
      WHERE TABLE_TYPE LIKE 'VIEW'
        AND TABLE_SCHEMA = 'dms_sample';
-
+```
    If not, why not?
 
    ###### 6 - There is a way to migrate views from Mysql? How?
