@@ -106,9 +106,14 @@ And then create the user and insert data running the commands from the following
 
 https://github.com/aws-samples/aws-database-migration-samples/tree/master/mysql/sampledb/v1
 
+git clone https://github.com/aws-samples/aws-database-migration-samples
+mysql -h rdsmysql.dms.com -uroot -p < install-rds.sql
+
 To confirm the tables were created under dms_user schema you can run the following:
 
-SQL> select table_name from dba_tables where owner = 'dms_user';
+SQL> SELECT TABLE_SCHEMA, TABLE_NAME 
+     FROM information_schema.tables 
+     WHERE TABLE_SCHEMA = 'dms_sample';
 
 ## 6 - Enable pre requirements on the RDS Source
 
